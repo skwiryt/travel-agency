@@ -58,10 +58,9 @@ class App extends React.Component {
     };
     return (
       <BrowserRouter>
-        <MainLayout>
-                 
+        <MainLayout>              
           <AnimatedSwitch 
-            location={location}
+            // location={location}
             atEnter={pageTransition.atEnter}
             atLeave={pageTransition.atLeave}
             atActive={pageTransition.atActive}
@@ -70,17 +69,7 @@ class App extends React.Component {
               transform: `translateY(${styles.offset}px)`,
             })}
             className={styles.switchWrapper}
-          > 
-          
-            {/*
-          <AnimatedSwitch 
-            location={location}
-            atEnter={{opacity: 0}}
-            atLeave={{opacity: 0}}
-            atActive={{opacity: 1}}
-            className={styles.switchWrapper}
-          >     
-          */}
+          >           
             <Route exact path='/' component={Home} />   
             <Route exact path='/countries' component={Countries} />
             <Route exact path='/regions' component={Regions} />
