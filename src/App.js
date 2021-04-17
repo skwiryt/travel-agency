@@ -49,7 +49,7 @@ class App extends React.Component {
       },
       atLeave: {
         opacity: 0,
-        offset: 0,
+        offset: -200,
       },
       atActive: {
         opacity: 1,
