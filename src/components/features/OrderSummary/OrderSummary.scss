@@ -3,12 +3,13 @@
 .component {
   position: relative;
   margin: ($base-size * 2) 0;
+  text-align: right;
   @include p-el('before') {
     content: '';
     width: ($base-size * 4);
     height: 4px;
     top: ($base-size * -1);
-    left: 0;
+    right: 0;
     background: $color-dark;
   }
 }
