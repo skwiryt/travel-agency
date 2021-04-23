@@ -14,6 +14,8 @@ export const CHANGE_DURATION_FROM = createActionName('CHANGE_DURATION_FROM');
 export const CHANGE_DURATION_TO = createActionName('CHANGE_DURATION_TO');
 export const ADD_TAG_FILTER = createActionName('ADD_TAG_FILTER');
 export const REMOVE_TAG_FILTER = createActionName('REMOVE_TAG_FILTER');
+export const ADD_REGION_FILTER = createActionName('ADD_REGION_FILTER');
+export const REMOVE_REGION_FILTER = createActionName('REMOVE_REGION_FILTER');
 
 
 // action creators
@@ -22,6 +24,8 @@ export const changeDurationFrom = payload => ({ payload, type: CHANGE_DURATION_F
 export const changeDurationTo = payload => ({ payload, type: CHANGE_DURATION_TO });
 export const addTagFilter = payload => ({ payload, type: ADD_TAG_FILTER });
 export const removeTagFilter = payload => ({ payload, type: REMOVE_TAG_FILTER });
+export const addRegionFilter = payload => ({ payload, type: ADD_REGION_FILTER });
+export const removeRegionFilter = payload => ({ payload, type: REMOVE_REGION_FILTER });
 
 // TODO - add other action creators
 
@@ -38,6 +42,7 @@ export default function reducer(statePart = [], action = {}) {
       return {
         searchPhrase: statePart.searchPhrase,
         tags: statePart.tags,
+        regions: statePart.regions,
         duration: {
           from: action.payload,
           to: statePart.duration.to,
@@ -47,6 +52,7 @@ export default function reducer(statePart = [], action = {}) {
       return {
         searchPhrase: statePart.searchPhrase,
         tags: statePart.tags,
+        regions: statePart.regions,
         duration: {
           from: statePart.duration.from,
           to: action.payload,
@@ -55,6 +61,7 @@ export default function reducer(statePart = [], action = {}) {
     case ADD_TAG_FILTER:
       return {
         searchPhrase: statePart.searchPhrase,
+        regions: statePart.regions,
         tags: [...statePart.tags, action.payload],
         duration: statePart.duration,        
       };
@@ -62,7 +69,23 @@ export default function reducer(statePart = [], action = {}) {
     case REMOVE_TAG_FILTER:
       return {
         searchPhrase: statePart.searchPhrase,
+        regions: statePart.regions,
         tags: statePart.tags.filter(tag => tag !=action.payload),
+        duration: statePart.duration,        
+      };
+    case ADD_REGION_FILTER:
+      return {
+        searchPhrase: statePart.searchPhrase,
+        tags: statePart.tags,
+        regions: [...statePart.regions, action.payload],
+        duration: statePart.duration,        
+      };
+
+    case REMOVE_REGION_FILTER:
+      return {
+        searchPhrase: statePart.searchPhrase,
+        tags: statePart.tags,
+        regions: statePart.regions.filter(region => region !=action.payload),
         duration: statePart.duration,        
       };
 
