@@ -18,20 +18,17 @@ const OrderOptionCheckboxes = ({currentValue, values,  setOptionValue}) => (
   
   <div className={styles.checkboxes} > {
     values.map(value => {
-      /*
-      const classes = currentValue === value.id 
-        ? `${styles.icon} ${styles.iconActive}`
-        : `${styles.icon}`;
-      */
+      
       return (
         <label 
           key={value.id} 
-          //className={classes}          
+                
         >
           <input 
             type='checkbox' 
             checked={currentValue.includes(value.id)}
             name={value.icon}
+            value={value.id}
             onChange={
               event => setOptionValue(newValueSet(currentValue,value.id, event.currentTarget.checked))
             }
