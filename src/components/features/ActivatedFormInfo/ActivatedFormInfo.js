@@ -1,7 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const ActivatedFormInfo = ({contactValid, nameValid}) => {
+
+const ActivatedFormInfo = (props) => {
+  const {contactValid, nameValid} = props;
+  
   if (contactValid && nameValid) {
     return (
       <div>
@@ -11,7 +14,7 @@ const ActivatedFormInfo = ({contactValid, nameValid}) => {
   } else {
     return (
       <div>
-        <p>Both, contact and your name must be given.</p>
+        <p>Both, contact and your name must be given. {props.contactValid} {props.nameValid}</p>
       </div>
     );
   }

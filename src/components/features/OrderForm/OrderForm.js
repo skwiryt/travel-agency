@@ -9,69 +9,115 @@ import Button from '../../common/Button/Button';
 import settings from '../../../data/settings';
 import {formatPrice} from '../../../utils/formatPrice';
 import {calculateTotal} from '../../../utils/calculateTotal';
-// import ActivatedFormInfo from '../ActivatedFormInfo/ActivatedFormInfo';
+import ActivatedFormInfo from '../ActivatedFormInfo/ActivatedFormInfo';
 
-const sendOrder = (options, tripCost) => {
-  const totalCost = formatPrice(calculateTotal(tripCost, options));
 
-  const payload = {
-    ...options,
-    totalCost,
-  };
 
-  const url = settings.db.url + '/' + settings.db.endpoint.orders;
+class OrderForm extends React.Component {
 
-  const fetchOptions = {
-    cache: 'no-cache',
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(payload),
-  };
-
-  fetch(url, fetchOptions)
-    .then(function(response){
-      return response.json();
-    }).then(function(parsedResponse){
-      console.log('parsedResponse', parsedResponse);
+  constructor(props) {
+    super(props);
+    this.state = {
+      formActivated: false,
+      contactValid: false,
+      nameValid: false,
+    };
+  }
+  validateForm = () => {
+    const {contact, name} = this.props.options;
+    const contactValid = contact.length > 5 ? true : false;
+    const nameValid = name.length > 5 ? true : false;
+    this.setState({
+      formActivated: true,
+      contactValid,
+      nameValid,
     });
-};
+    return contactValid && nameValid;    
+  }
 
-const OrderForm = ({tripCost, options, setOrderOption}) => (
-  <div className={styles.component}>
-    <div className={styles.orderOptions}>
-      <Row>
-        {
-          pricing.map(option => (
-            <Col key={option.id} md={4} >
-              <OrderOption 
-                {...option} 
-                currentValue={options[option.id]}
-                setOrderOption={setOrderOption}
-              />
-            </Col>
-          ))
-        }
-      </Row>
-    </div>
-    <Row>
-      <Col xs={12} >
-        <OrderSummary tripCost={tripCost} options={options}/>
+  sendOrder = () => {
+    const {options, tripCost, tripId, tripName} = this.props;
+    const formValid = this.validateForm();
+    if (formValid) {
+      const totalCost = formatPrice(calculateTotal(tripCost, options));  
+      const payload = {
+        ...options,
+        tripId,
+        tripName,
+        totalCost,
+      };  
+      const url = settings.db.url + '/' + settings.db.endpoint.orders;  
+      const fetchOptions = {
+        cache: 'no-cache',
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      };    
+      fetch(url, fetchOptions)
+        .then(function(response){
+          return response.json();
+        }).then(function(parsedResponse){
+          console.log('parsedResponse', parsedResponse);
+        });
+    }
+  };
+
+  render() {
+    const {tripCost, options, setOrderOption} = this.props;
+    
+    const message = this.state.formActivated ? (
+      <Col xs={8} >
+        <ActivatedFormInfo 
+          contactValid={this.state.contactValid}
+          nameValid={this.state.nameValid} />
       </Col>
-    </Row>
-    <Row>
-      <Col xs={12} >
-        <Button onClick={() => sendOrder(options, tripCost)}>Order now!</Button>
-      </Col>
-    </Row>
-  </div>
-);
+    ) : '';
+    return (
+      <div className={styles.component}>
+        <div className={styles.orderOptions}>
+          <Row>
+            {
+              pricing.map(option => (
+                <Col key={option.id} md={4} >
+                  <OrderOption 
+                    {...option} 
+                    currentValue={options[option.id]}
+                    setOrderOption={setOrderOption}
+                  />
+                </Col>
+              ))
+            }
+          </Row>
+        </div>
+        <Row>
+          <Col xs={12} >
+            <OrderSummary tripCost={tripCost} options={options}/>
+          </Col>
+        </Row>
+        <Row>
+          <Col xs={4} >
+            <Button onClick={() => this.sendOrder(options, tripCost)}>Order now!</Button>
+          </Col>
+          {message}
+        </Row>
+      </div>
+    );
+  }
+  
+
+
+}
+  
+
 
 OrderForm.propTypes = {
   tripCost: PropTypes.string,
   options: PropTypes.object,
   setOrderOption: PropTypes.func,
+  tripId: PropTypes.string,
+  tripName: PropTypes.string,
 };
 
 export default OrderForm;
