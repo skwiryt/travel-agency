@@ -37,8 +37,7 @@ class OrderForm extends React.Component {
 
   sendOrder = () => {
     const {options, tripCost, tripId, tripName} = this.props;
-    const formValid = this.validateForm();
-    if (formValid) {
+    if (this.validateForm()) {
       const totalCost = formatPrice(calculateTotal(tripCost, options));  
       const payload = {
         ...options,
